@@ -1,0 +1,49 @@
+version: '3.7'
+
+networks:
+  qw_backend_internal-communications:
+    name: qw_backend_internal-communications
+    ipam:
+      config:
+        - subnet: 159.86.0.0/16
+  qw_backend_entry-point:
+    name: qw_backend_entry-point
+  qw_auth-ms_entry-point:
+    external: true
+  qw_workers-ms_entry-point:
+    external: true
+  qw_learning-ms_entry-point:
+    external: true
+
+services:
+  qw_backend_web-server:
+    container_name: qw-backend-nginx
+    image: nginx:latest
+    restart: unless-stopped
+    networks:
+      qw_backend_internal-communications:
+        ipv4_address: 159.86.173.80
+      qw_backend_entry-point:
+        aliases:
+          - backend.local
+    depends_on:
+      - qw_backend_process-manager
+    volumes:
+#      - ./docker/virtual-host.conf:/etc/nginx/conf.d/default.conf
+#      - ./docker/ssl:/etc/ssl/certs
+      - .:/var/www
+
+  qw_backend_process-manager:
+    container_name: qw-backend-php
+    image: blackmaizegod/php-fpm:8.2
+    restart: unless-stopped
+    networks:
+      - qw_backend_internal-communications
+      - qw_auth-ms_entry-point
+      - qw_workers-ms_entry-point
+      - qw_learning-ms_entry-point
+    volumes:
+      - .:/var/www
+    environment:
+      - XDEBUG_HOST=159.86.0.1
+      - COMPOSER_VERSION=2
