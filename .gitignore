@@ -17,3 +17,7 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+
+docker
+!docker/ssl/.gitkeep
+!docker/virtual-host.conf

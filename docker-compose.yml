@@ -29,8 +29,8 @@ services:
     depends_on:
       - qw_backend_process-manager
     volumes:
-#      - ./docker/virtual-host.conf:/etc/nginx/conf.d/default.conf
-#      - ./docker/ssl:/etc/ssl/certs
+      - ./docker/virtual-host.conf:/etc/nginx/conf.d/default.conf
+      - ./docker/ssl:/etc/ssl/certs
       - .:/var/www
 
   qw_backend_process-manager:
