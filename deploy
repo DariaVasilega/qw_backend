@@ -1,0 +1,15 @@
+#!/bin/sh
+
+docker-compose down
+
+mkcert -cert-file ./docker/ssl/backend.local.pem -key-file ./docker/ssl/backend.local.key backend.local
+
+docker-compose up -d --build --force-recreate
+
+docker exec -it qw-backend-php composer install
+
+# Inject .pem certificate for HTTPS communication to microservices
+docker exec -i -u root qw-backend-php bash -c 'cat > /etc/pki/ca-trust/source/anchors/qw.ms.pem' < $(mkcert -CAROOT)/rootCA.pem
+docker exec -i -uroot qw-backend-php bash -c 'update-ca-trust extract'
+docker exec -i -uroot qw-backend-php bash -c 'echo openssl.cafile=/etc/pki/tls/certs/ca-bundle.crt >> /etc/php.ini'
+docker exec -i -uroot qw-backend-php bash -c '/phpfpm_restart.sh'
