@@ -12,3 +12,9 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+// Common Router
+Route::any('/', static fn () => response('Qualification Work API'));
+
+// Microservices Proxy Router
+Route::any( '{any}', [\App\Http\Controllers\Proxy::class, 'index'])->where('any', '.*');
