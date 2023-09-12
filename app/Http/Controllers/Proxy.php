@@ -43,9 +43,13 @@ class Proxy extends Controller
         }
 
         /** @var \Illuminate\Http\Client\Response $response */
-        $response = $this->clientResolver->getClient(
-            $this->clientResolver->identifyClient($path)
-        )->$method($path, request()?->toArray(), request()?->headers->all());
+        $response = $this->clientResolver
+            ->getClientByUrlPath($path)
+            ->$method(
+                $path,
+                request()?->toArray(),
+                request()?->headers->all()
+            );
 
         return \response($response->json(), $response->status(), $response->headers());
     }

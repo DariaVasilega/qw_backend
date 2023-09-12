@@ -6,6 +6,8 @@ namespace App\Services\Http;
 
 class ClientResolver
 {
+    private EntityTypeSeeker $entityTypeSeeker;
+
     private \App\Services\Http\Client\AuthMs $authClient;
 
     private \App\Services\Http\Client\LearningMs $learningClient;
@@ -32,10 +34,12 @@ class ClientResolver
     ];
 
     public function __construct(
+        EntityTypeSeeker $entityTypeSeeker,
         Client\AuthMs $authClient,
         Client\LearningMs $learningClient,
         Client\WorkersMs $workersClient,
     ) {
+        $this->entityTypeSeeker = $entityTypeSeeker;
         $this->authClient = $authClient;
         $this->learningClient = $learningClient;
         $this->workersClient = $workersClient;
@@ -50,17 +54,13 @@ class ClientResolver
         return $this->{$this->clients[$entityType]};
     }
 
-    public function identifyClient(string $string): ?string
+    public function getClientByUrlPath(string $urlPath): Client\AbstractMs
     {
-        $possibleClients = [];
+        return $this->getClient($this->entityTypeSeeker->seek($urlPath));
+    }
 
-        preg_match_all(
-            '/^('.implode('|', array_keys($this->clients)).')/',
-            ltrim($string, '/'),
-            $possibleClients,
-            PREG_SET_ORDER
-        );
-
-        return $possibleClients[0][0] ?? null;
+    public function getClientEntityTypeByUrlPath(string $urlPath): string
+    {
+        return $this->entityTypeSeeker->seek($urlPath);
     }
 }

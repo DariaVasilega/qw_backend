@@ -40,7 +40,7 @@ class PermissionManager
      */
     public function isPermitted(string $route, string $httpMethod): bool
     {
-        $entityType = $this->clientResolver->identifyClient($route);
+        $entityType = $this->clientResolver->getClientEntityTypeByUrlPath($route);
 
         if (in_array($entityType, self::EXCLUDED_ROUTES, true)) {
             return true;
@@ -63,9 +63,13 @@ class PermissionManager
             return;
         }
 
-        $response = $this->clientResolver->getClient(
-            $this->clientResolver->identifyClient('/auth')
-        )->get('/auth', null, $this->request->headers->all());
+        $response = $this->clientResolver
+            ->getClientByUrlPath('/auth')
+            ->get(
+                '/auth',
+                null,
+                $this->request->headers->all()
+            );
 
         if ($response->status() !== \Symfony\Component\HttpFoundation\Response::HTTP_OK) {
             throw new \App\Exceptions\MicroserviceException(
