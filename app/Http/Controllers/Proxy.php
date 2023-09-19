@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Services\Http\ClientResolver;
 use App\Services\Http\PermissionManager;
+use App\Services\Http\SpecialCaseManager;
 use Illuminate\Http\Client\HttpClientException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -15,12 +16,16 @@ class Proxy extends Controller
 
     private PermissionManager $permissionManager;
 
+    private SpecialCaseManager $specialCaseManager;
+
     public function __construct(
         ClientResolver $clientResolver,
-        PermissionManager $permissionManager
+        PermissionManager $permissionManager,
+        SpecialCaseManager $specialCaseManager
     ) {
         $this->clientResolver = $clientResolver;
         $this->permissionManager = $permissionManager;
+        $this->specialCaseManager = $specialCaseManager;
     }
 
     /**
@@ -42,6 +47,8 @@ class Proxy extends Controller
             throw $exception;
         }
 
+        $this->specialCaseManager->resolveCases(request());
+
         /** @var \Illuminate\Http\Client\Response $response */
         $response = $this->clientResolver
             ->getClientByUrlPath($path)
@@ -50,6 +57,8 @@ class Proxy extends Controller
                 request()?->toArray(),
                 request()?->headers->all()
             );
+
+        $this->specialCaseManager->resolveCases(request(), 'after', $response);
 
         return \response($response->json(), $response->status(), $response->headers());
     }
