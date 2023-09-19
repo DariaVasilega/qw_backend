@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\MicroserviceException;
 use App\Services\Http\ClientResolver;
 use App\Services\Http\PermissionManager;
 use App\Services\Http\SpecialCaseManager;
-use Illuminate\Http\Client\HttpClientException;
 use Symfony\Component\HttpFoundation\Response;
 
 class Proxy extends Controller
@@ -29,7 +29,7 @@ class Proxy extends Controller
     }
 
     /**
-     * @throws \Illuminate\Http\Client\HttpClientException
+     * @throws MicroserviceException
      */
     public function index(string $path): \Illuminate\Http\Response
     {
@@ -37,9 +37,9 @@ class Proxy extends Controller
 
         try {
             if (! $this->permissionManager->isPermitted($path, $method)) {
-                throw new HttpClientException('', Response::HTTP_UNAUTHORIZED);
+                throw new MicroserviceException('', Response::HTTP_UNAUTHORIZED); // TODO
             }
-        } catch (HttpClientException $exception) {
+        } catch (MicroserviceException $exception) {
             if ($exception->getCode() === Response::HTTP_UNAUTHORIZED) {
                 return \response('nada avtorizovatsa'); // TODO
             }
