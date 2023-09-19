@@ -14,7 +14,7 @@ class SpecialCaseManager
      * @var \App\Services\Http\SpecialCases\AbstractCase[]
      */
     protected array $before = [
-        // TODO
+        'deleteUser',
     ];
 
     /**
