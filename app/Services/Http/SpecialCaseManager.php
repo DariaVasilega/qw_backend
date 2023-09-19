@@ -21,7 +21,7 @@ class SpecialCaseManager
      * @var \App\Services\Http\SpecialCases\AbstractCase[]
      */
     protected array $after = [
-        // TODO
+        'createUser',
     ];
 
     private EntityTypeSeeker $entityTypeSeeker;
