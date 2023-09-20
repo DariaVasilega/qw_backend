@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Common Router
+Route::any('/', static fn () => response('Qualification Work API'));
+
+// Microservices Proxy Router
+Route::any( '{any}', [\App\Http\Controllers\Proxy::class, 'index'])->where('any', '.*');

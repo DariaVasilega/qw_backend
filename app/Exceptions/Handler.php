@@ -3,7 +3,6 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Throwable;
 
 class Handler extends ExceptionHandler
 {
@@ -20,10 +19,18 @@ class Handler extends ExceptionHandler
 
     /**
      * Register the exception handling callbacks for the application.
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function register(): void
     {
-        $this->reportable(function (Throwable $e) {
+        $this->renderable(function (MicroserviceException $exception) {
+            return response()->json(
+                json_decode($exception->getMessage(), true, 512, JSON_THROW_ON_ERROR),
+                $exception->getCode()
+            );
+        });
+
+        $this->reportable(function (\Throwable $e) {
             //
         });
     }
