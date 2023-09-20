@@ -30,21 +30,22 @@ class Proxy extends Controller
 
     /**
      * @throws MicroserviceException
+     * @throws \JsonException
      */
     public function index(string $path): \Illuminate\Http\Response
     {
         $method = strtolower((string) request()?->method());
 
-        try {
-            if (! $this->permissionManager->isPermitted($path, $method)) {
-                throw new MicroserviceException('', Response::HTTP_UNAUTHORIZED); // TODO
-            }
-        } catch (MicroserviceException $exception) {
-            if ($exception->getCode() === Response::HTTP_UNAUTHORIZED) {
-                return \response('nada avtorizovatsa'); // TODO
-            }
+        if (! $this->permissionManager->isPermitted($path, $method)) {
+            $error = [
+                'statusCode' => Response::HTTP_UNAUTHORIZED,
+                'error' => [
+                    'type' => 'UNAUTHENTICATED',
+                    'description' => __('messages.error.403', [], request()?->getPreferredLanguage()),
+                ],
+            ];
 
-            throw $exception;
+            throw new MicroserviceException(json_encode($error, JSON_THROW_ON_ERROR), Response::HTTP_UNAUTHORIZED);
         }
 
         $this->specialCaseManager->resolveCases(request());
