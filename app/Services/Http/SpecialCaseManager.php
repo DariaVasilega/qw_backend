@@ -15,6 +15,7 @@ class SpecialCaseManager
      */
     protected array $before = [
         'deleteUser',
+        'updateUser',
     ];
 
     /**
