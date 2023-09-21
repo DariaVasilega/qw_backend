@@ -14,7 +14,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Common Router
-Route::any('/', static fn () => response('Qualification Work API'));
+Route::view('{any}', 'errors/404', [], 404)->where('any', '.*');
 
-// Microservices Proxy Router
-Route::any( '{any}', [\App\Http\Controllers\Proxy::class, 'index'])->where('any', '.*');
