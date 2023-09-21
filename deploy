@@ -13,3 +13,7 @@ docker exec -i -u root qw-backend-php bash -c 'cat > /etc/pki/ca-trust/source/an
 docker exec -i -uroot qw-backend-php bash -c 'update-ca-trust extract'
 docker exec -i -uroot qw-backend-php bash -c 'echo openssl.cafile=/etc/pki/tls/certs/ca-bundle.crt >> /etc/php.ini'
 docker exec -i -uroot qw-backend-php bash -c '/phpfpm_restart.sh'
+docker exec -i -uroot qw-backend-php npm i
+docker exec -i -uroot qw-backend-php npm i -d
+docker exec -i -uroot qw-backend-php npm run build
+
