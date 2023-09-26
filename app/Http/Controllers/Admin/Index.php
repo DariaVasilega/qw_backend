@@ -23,7 +23,7 @@ class Index extends Controller
     public function render(): \Illuminate\Contracts\View\View
     {
         return session('token') && $this->permissionManager->hasPermission(Login::PERMISSION)
-            ? view('admin_dashboard')
+            ? view('admin_dashboard', ['permissions' => $this->permissionManager->getPermissions()])
             : view('login');
     }
 }

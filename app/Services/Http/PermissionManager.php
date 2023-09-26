@@ -56,11 +56,19 @@ class PermissionManager
      */
     public function hasPermission(string $permission): bool
     {
-        $this->askPermissions();
-        $permissions = $this->session::get('permissions');
+        $permissions = $this->getPermissions();
 
-        return is_array($permissions)
-            && in_array($permission, $permissions, true);
+        return in_array($permission, $permissions, true);
+    }
+
+    /**
+     * @throws \App\Exceptions\MicroserviceException
+     */
+    public function getPermissions(): array
+    {
+        $this->askPermissions();
+
+        return $this->session::get('permissions', []);
     }
 
     /**
