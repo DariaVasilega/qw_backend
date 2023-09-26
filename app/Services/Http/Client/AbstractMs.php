@@ -70,6 +70,12 @@ abstract class AbstractMs
             unset($headers[$headerToRemove]);
         }
 
-        return array_replace_recursive($headers, self::HEADERS_TO_REPLACE);
+        $preparedHeaders  = array_replace_recursive($headers, self::HEADERS_TO_REPLACE);
+
+        if (! isset($preparedHeaders['authorization']) && ($token = session('token'))) {
+            $preparedHeaders['authorization'][] = "Bearer $token";
+        }
+
+        return  $preparedHeaders;
     }
 }

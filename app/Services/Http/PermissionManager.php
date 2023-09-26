@@ -46,12 +46,21 @@ class PermissionManager
             return true;
         }
 
-        $this->askPermissions();
-        $permissions = $this->session::get('permissions');
         $crudAction = $this->getCrudActionFromHttpMethod($httpMethod);
 
+        return $this->hasPermission("{$entityType}_{$crudAction}");
+    }
+
+    /**
+     * @throws \App\Exceptions\MicroserviceException
+     */
+    public function hasPermission(string $permission): bool
+    {
+        $this->askPermissions();
+        $permissions = $this->session::get('permissions');
+
         return is_array($permissions)
-            && in_array("{$entityType}_{$crudAction}", $permissions, true);
+            && in_array($permission, $permissions, true);
     }
 
     /**

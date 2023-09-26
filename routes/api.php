@@ -13,5 +13,3 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Microservices Proxy Router
-Route::any('{any}', [\App\Http\Controllers\Proxy::class, 'index'])->where('any', '.*');
