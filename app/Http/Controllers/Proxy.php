@@ -9,6 +9,7 @@ use App\Services\Http\ClientResolver;
 use App\Services\Http\PermissionManager;
 use App\Services\Http\SpecialCaseManager;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Proxy extends Controller
 {
@@ -32,7 +33,7 @@ class Proxy extends Controller
      * @throws MicroserviceException
      * @throws \JsonException
      */
-    public function index(string $path): \Illuminate\Http\Response
+    public function index(string $path = ''): \Illuminate\Http\Response|\Illuminate\Contracts\View\View
     {
         $method = strtolower((string) request()?->method());
 
@@ -50,14 +51,19 @@ class Proxy extends Controller
 
         $this->specialCaseManager->resolveCases(request());
 
-        /** @var \Illuminate\Http\Client\Response $response */
-        $response = $this->clientResolver
-            ->getClientByUrlPath($path)
-            ->$method(
-                $path,
-                request()?->toArray(),
-                request()?->headers->all()
-            );
+        try {
+            /** @var \Illuminate\Http\Client\Response $response */
+            $response = $this->clientResolver
+                ->getClientByUrlPath($path)
+                ->$method(
+                    $path,
+                    request()?->toArray(),
+                    request()?->headers->all()
+                );
+        } catch (NotFoundHttpException $exception) {
+            return view('errors.404');
+        }
+
 
         $this->specialCaseManager->resolveCases(request(), 'after', $response);
 

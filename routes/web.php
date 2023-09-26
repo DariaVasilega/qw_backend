@@ -25,5 +25,3 @@ Route::any('/lection/last/statistic', [\App\Http\Controllers\Api\LastLectionStat
 // Microservices Proxy Router
 Route::any('{any}', [\App\Http\Controllers\Proxy::class, 'index'])->where('any', '.*');
 
-// TODO 404 error page
-
