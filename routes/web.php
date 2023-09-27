@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/admin', [\App\Http\Controllers\Admin\Index::class, 'render']);
 Route::post('/admin/login', [\App\Http\Controllers\Admin\Login::class, 'action']);
 Route::post('/admin/logout', [\App\Http\Controllers\Admin\Logout::class, 'action']);
+Route::get('/admin/page/{view}', [\App\Http\Controllers\Admin\Page::class, 'render'])->where('view', '[a-z_]+');
 
 
 // Custom Api Routes
