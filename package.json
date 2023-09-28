@@ -17,6 +17,7 @@
     },
     "dependencies": {
         "htmx.org": "^1.9.6",
+        "hyperscript.org": "^0.9.11",
         "nunjucks": "^3.2.4"
     }
 }
