@@ -1,12 +1,12 @@
-<div class="flex items-center justify-center mb-4 bg-gray-50 p-4 border-2 border-gray-300 border-dashed rounded-lg" hx-ext="client-side-templates">
-    <div class="flex flex-col w-full" hx-get="{{ url('/lection/last/statistic') }}" hx-trigger="load" nunjucks-template="last_lection_statistic" hx-indicator="#last_lection_statistic_spinner">
+<div class="flex items-center justify-center mb-4 bg-gray-50 p-4 border-2 border-gray-300 border-dashed rounded-lg" hx-ext="client-side-templates" _="on htmx:load remove @hx-ext">
+    <div class="flex flex-col w-full" hx-get="{{ url('/lection/last/statistic') }}" hx-trigger="load" nunjucks-template="last_lection_statistic" hx-indicator="#last_lection_statistic_spinner" _="on htmx:load remove @hx-indicator">
         <div id="last_lection_statistic_spinner" class="flex justify-center">
             <img alt="Spinner" class="h-50 w-50" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif"/>
         </div>
         <template id="last_lection_statistic">
             <div class="flex justify-center mb-4">
                 {{-- TODO: link to the test --}}
-                <p class="text-2xl text-gray-500">Statistic for Lection Test: "<span class="hover:text-gray-400 hover:cursor-pointer">@{{ label }}</span>"</p>
+                <p class="text-2xl text-gray-500">Statistic for Lection Test: "<span class="text-gray-400 hover:text-gray-300 hover:cursor-pointer underline">@{{ label }}</span>"</p>
             </div>
             <div class="relative w-50 h-50 -mt-5">
                 <div class="flex flex-nowrap">
@@ -39,8 +39,7 @@
                             <ul>
                                 {% if users %}
                                     {% for user in users %}
-                                        {{-- TODO: link to the account --}}
-                                        <li class="hover:text-gray-400 hover:cursor-pointer">@{{ user.firstname }} @{{ user.lastname }}</li>
+                                        <li class="hover:text-gray-400 hover:cursor-pointer" hx-get="{{ url('/admin/page/user?id=') }}@{{ user.id }}&disabled=true" hx-target=".content">@{{ user.firstname }} @{{ user.lastname }}</li>
                                     {% endfor %}
                                 {% endif %}
                             </ul>

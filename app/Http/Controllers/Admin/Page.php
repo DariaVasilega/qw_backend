@@ -10,6 +10,7 @@ class Page
 {
     private const PERMISSIONS = [
         'users' => 'user_read',
+        'user' => 'user_read',
     ];
 
     private PermissionManager $permissionManager;
@@ -30,6 +31,8 @@ class Page
         $parameters = [
             'permissions' => $this->permissionManager->getPermissions(),
             'page' => request()?->get('page') ?? 1,
+            'id' => request()?->get('id'),
+            'disabled' => request()?->get('disabled') ? 'disabled="true"' : '',
         ];
 
         return request()?->hasHeader('hx-request')
