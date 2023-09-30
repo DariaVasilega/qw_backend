@@ -21,18 +21,18 @@
                         @if($disabled)
                             <span class="flex">
                                 @if(in_array('user_update', $permissions, true))
-                                    <span class="mx-2 text-gray-400 transition duration-75 hover:text-gray-900 hover:cursor-pointer" hx-get="{{ url('/admin/page/user?id=') }}@{{ data.user.id }}" hx-target=".content">
+                                    <a href="#user-id-@{{ data.user.id }}-edit" class="mx-2 text-gray-400 transition duration-75 hover:text-gray-900 hover:cursor-pointer" hx-get="{{ url('/admin/page/user?id=') }}@{{ data.user.id }}" hx-target=".content">
                                         <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                             <path d="m13.835 7.578-.005.007-7.137 7.137 2.139 2.138 7.143-7.142-2.14-2.14Zm-10.696 3.59 2.139 2.14 7.138-7.137.007-.005-2.141-2.141-7.143 7.143Zm1.433 4.261L2 12.852.051 18.684a1 1 0 0 0 1.265 1.264L7.147 18l-2.575-2.571Zm14.249-14.25a4.03 4.03 0 0 0-5.693 0L11.7 2.611 17.389 8.3l1.432-1.432a4.029 4.029 0 0 0 0-5.689Z"/>
                                         </svg>
-                                    </span>
+                                    </a>
                                 @endif
                                 @if(in_array('user_delete', $permissions, true))
-                                    <span class="mx-2 text-gray-400 transition duration-75 hover:text-gray-900 hover:cursor-pointer" hx-delete="{{ url('/user') }}/@{{ data.user.id }}" hx-target="closest form" hx-swap="delete" _="on click wait 0.1s htmx.ajax('GET', '{{ url('/admin/page/users') }}', '.content')">
+                                    <a href="#users" class="mx-2 text-gray-400 transition duration-75 hover:text-gray-900 hover:cursor-pointer" hx-delete="{{ url('/user') }}/@{{ data.user.id }}" hx-target="closest form" hx-swap="delete" _="on click wait 0.1s htmx.ajax('GET', '{{ url('/admin/page/users') }}', '.content')">
                                         <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
                                             <path d="M17 4h-4V2a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v2H1a1 1 0 0 0 0 2h1v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1a1 1 0 1 0 0-2ZM7 2h4v2H7V2Zm1 14a1 1 0 1 1-2 0V8a1 1 0 0 1 2 0v8Zm4 0a1 1 0 0 1-2 0V8a1 1 0 0 1 2 0v8Z"/>
                                         </svg>
-                                    </span>
+                                    </a>
                                 @endif
                             </span>
                         @else
@@ -105,8 +105,9 @@
 @endif
 
 <template id="response_message">
-    <?php $newEntityUrl = url('/admin/page/user?disabled=true&id=') . ($id ?: '{{ data.user.id }}') ?>
-    <div class="flex justify-center" hx-get="{{ $newEntityUrl }}" hx-trigger="load delay:500ms" hx-target=".content">
+    <?php $userId = ($id ?: '{{ data.user.id }}') ?>
+    <?php $newEntityUrl = url('/admin/page/user?disabled=true&id=') . $userId ?>
+    <div class="flex justify-center" hx-get="{{ $newEntityUrl }}" hx-trigger="load delay:500ms" hx-target=".content" hx-on::before-request="window.location.hash='#user-id-{{ $userId }}-view'">
         <p class="text-gray-500 text-lg">@{{ data.message }}</p>
     </div>
 </template>

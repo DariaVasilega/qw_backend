@@ -39,7 +39,9 @@
                             <ul>
                                 {% if users %}
                                     {% for user in users %}
-                                        <li class="hover:text-gray-400 hover:cursor-pointer" hx-get="{{ url('/admin/page/user?id=') }}@{{ user.id }}&disabled=true" hx-target=".content">@{{ user.firstname }} @{{ user.lastname }}</li>
+                                        <li class="hover:text-gray-400 hover:cursor-pointer" hx-get="{{ url('/admin/page/user?id=') }}@{{ user.id }}&disabled=true" hx-target=".content">
+                                            <a href="#user-id-@{{ user.id }}-view">@{{ user.firstname }} @{{ user.lastname }}</a>
+                                        </li>
                                     {% endfor %}
                                 {% endif %}
                             </ul>
