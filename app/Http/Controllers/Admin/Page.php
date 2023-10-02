@@ -11,6 +11,8 @@ class Page
     private const PERMISSIONS = [
         'users' => 'user_read',
         'user' => 'user_read',
+        'roles' => 'role_read',
+        'role' => 'role_read',
     ];
 
     private PermissionManager $permissionManager;
