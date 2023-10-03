@@ -17,6 +17,7 @@ class EntityTypeSeeker
         'question',
         'answer',
         'score',
+        'user\/[0-9]+\/roles',
         'user',
         'position',
         'position-histor',
@@ -33,7 +34,7 @@ class EntityTypeSeeker
             PREG_SET_ORDER
         );
 
-        if (!isset($possibleEntityTypes[0][0])) {
+        if (! isset($possibleEntityTypes[0][0])) {
             throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException('No such client');
         }
 

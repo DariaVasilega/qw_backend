@@ -19,6 +19,10 @@ class PermissionManager
         'delete' => 'delete',
     ];
 
+    private const ENTITY_TYPES_MAPPING = [
+        'user\/[0-9]+\/roles' => 'role',
+    ];
+
     private \Illuminate\Support\Facades\Session $session;
 
     private ClientResolver $clientResolver;
@@ -47,6 +51,16 @@ class PermissionManager
         }
 
         $crudAction = $this->getCrudActionFromHttpMethod($httpMethod);
+
+        $entityMappings = array_filter(
+            array_keys(self::ENTITY_TYPES_MAPPING),
+            static fn ($regexp) => preg_match("/^$regexp/", $entityType)
+        );
+        $match = current($entityMappings);
+
+        if ($match) {
+            $entityType = self::ENTITY_TYPES_MAPPING[$match] ?? $entityType;
+        }
 
         return $this->hasPermission("{$entityType}_{$crudAction}");
     }

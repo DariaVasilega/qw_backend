@@ -111,3 +111,20 @@
         <p class="text-gray-500 text-lg">@{{ data.message }}</p>
     </div>
 </template>
+
+@if($id && in_array('role_read', $permissions, true))
+    <x-listing.related
+            :batch-url='url("/user/$id/roles")'
+            :get-one-url="url('/admin/page/role?disabled=true&id=') . '@{{ role.code }}'"
+            :get-one-route="'#role-id-@{{ role.code }}-view'"
+            :permissions="$permissions"
+            :update-permission="'user_update'"
+            :disabled="$disabled"
+            :id="'@{{ role.code }}'"
+            :label="'@{{ role.label }}'"
+            :entities="'data.roles'"
+            :entity="'role'"
+            :headline="'user roles listing'"
+            :checkbox-name="'codes'"
+    />
+@endif
