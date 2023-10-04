@@ -22,6 +22,7 @@ class ClientResolver
         'logout' => 'authClient',
         'auth' => 'authClient',
         'user\/[0-9]+\/roles' => 'authClient',
+        'role\/[A-z0-9_-]+\/permissions' => 'authClient',
         'role' => 'authClient',
         'permission' => 'authClient',
         'lection' => 'learningClient',

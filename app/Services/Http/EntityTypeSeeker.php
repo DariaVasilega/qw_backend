@@ -10,6 +10,7 @@ class EntityTypeSeeker
         'login',
         'logout',
         'auth',
+        'role\/[A-z0-9_-]+\/permissions',
         'role',
         'permission',
         'lection',

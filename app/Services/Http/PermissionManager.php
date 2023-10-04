@@ -21,6 +21,7 @@ class PermissionManager
 
     private const ENTITY_TYPES_MAPPING = [
         'user\/[0-9]+\/roles' => 'role',
+        'role\/[A-z0-9_-]+\/permissions' => 'permission',
     ];
 
     private \Illuminate\Support\Facades\Session $session;

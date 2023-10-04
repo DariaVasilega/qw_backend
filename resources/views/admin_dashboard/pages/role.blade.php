@@ -62,6 +62,17 @@
                         <p id="label_error" class="mt-2 ml-2 text-sm text-red-600 hidden"><span class="font-medium"></span></p>
                     </div>
                 </fieldset>
+                @if(!$disabled)
+                    <fieldset>
+                        <div hx-ext="client-side-templates" _="on htmx:load remove @hx-ext">
+                            <div hx-get="{{ url('/permissions?limit=99999') }}" hx-trigger="load" nunjucks-template="add_permissions_to_role" hx-indicator="#add_permissions_to_role_spinner">
+                                <div id="add_permissions_to_role_spinner" class="flex justify-center">
+                                    <img alt="Spinner" class="h-20 w-20" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif"/>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                @endif
             </form>
 @if($id)
             </template>
@@ -69,8 +80,45 @@
     </div>
 @endif
 
+<template id="add_permissions_to_role">
+    {% if data.permissions %}
+    <legend class="mb-4 w-full text-center">
+        <span class="text-lg text-gray-500">Add permissions to role</span>
+    </legend>
+    <div class="w-full rounded-lg shadow">
+        <ul class="p-3 space-y-1 text-sm text-gray-700 flex flex-wrap">
+            {% for permission in data.permissions %}
+            <li>
+                <div class="flex items-center p-2 rounded hover:bg-gray-200">
+                    <input name="codes[@{{ loop.index }}]" id="permission-@{{ permission.code }}" type="checkbox" value="@{{ permission.code }}" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
+                    <label for="permission-@{{ permission.code }}" class="w-full ml-2 text-sm font-medium text-gray-900 rounded">@{{ permission.label }}</label>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+</template>
+
 <template id="response_message">
     <div class="flex justify-center" hx-on::load="window.location.hash=`#role-id-${window.roleCode}-view`; htmx.ajax('GET', `{{ url('/admin/page/role?disabled=true&id=') }}${window.roleCode}`, '.content')">
         <p class="text-gray-500 text-lg">@{{ data.message }}</p>
     </div>
 </template>
+
+@if($id && in_array('permission_read', $permissions, true))
+    <x-listing.related
+            :batch-url='url("/role/$id/permissions")'
+            :get-one-url="url('/admin/page/permission?disabled=true&id=') . '@{{ permission.code }}'"
+            :get-one-route="'#permission-id-@{{ permission.code }}-view'"
+            :permissions="$permissions"
+            :update-permission="'role_update'"
+            :disabled="$disabled"
+            :id="'@{{ permission.code }}'"
+            :label="'@{{ permission.label }}'"
+            :entities="'data.permissions'"
+            :entity="'permission'"
+            :headline="'role permissions listing'"
+            :checkbox-name="'codes'"
+    />
+@endif
