@@ -54,6 +54,16 @@
             </a>
         </li>
     @endif
+    @if(in_array('position_read', $permissions, true))
+        <li>
+            <a href="#positions" hx-get="{{ url('/admin/page/positions') }}" hx-target=".content" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 14 20">
+                    <path d="M7 0a7 7 0 0 0-1 13.92V19a1 1 0 1 0 2 0v-5.08A7 7 0 0 0 7 0Zm0 5.5A1.5 1.5 0 0 0 5.5 7a1 1 0 0 1-2 0A3.5 3.5 0 0 1 7 3.5a1 1 0 0 1 0 2Z"/>
+                </svg>
+                <span class="ml-3">Positions</span>
+            </a>
+        </li>
+    @endif
 @endsection
 
 @section('content')
