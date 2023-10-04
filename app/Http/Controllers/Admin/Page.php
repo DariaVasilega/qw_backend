@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
+use App\Services\Http\MicroserviceUserManager;
 use App\Services\Http\PermissionManager;
 
 class Page
@@ -17,10 +18,14 @@ class Page
 
     private PermissionManager $permissionManager;
 
+    private MicroserviceUserManager $userManager;
+
     public function __construct(
-        PermissionManager $permissionManager
+        PermissionManager $permissionManager,
+        MicroserviceUserManager $userManager,
     ) {
         $this->permissionManager = $permissionManager;
+        $this->userManager = $userManager;
     }
 
     /**
@@ -31,6 +36,7 @@ class Page
     public function render($view): \Illuminate\Contracts\View\View|\Illuminate\Http\Response
     {
         $parameters = [
+            'userManager' => $this->userManager,
             'permissions' => $this->permissionManager->getPermissions(),
             'page' => request()?->get('page') ?? 1,
             'id' => request()?->get('id'),

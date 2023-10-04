@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Http;
 
+use App\Services\Http\SpecialCases\AddRolesToUser;
 use App\Services\Http\SpecialCases\CreateUser;
 use App\Services\Http\SpecialCases\DeleteUser;
 use App\Services\Http\SpecialCases\UpdateUser;
@@ -23,6 +24,7 @@ class SpecialCaseManager
      */
     protected array $after = [
         'createUser',
+        'addRolesToUser',
     ];
 
     private EntityTypeSeeker $entityTypeSeeker;
@@ -33,16 +35,20 @@ class SpecialCaseManager
 
     private UpdateUser $updateUser;
 
+    private AddRolesToUser $addRolesToUser;
+
     public function __construct(
         EntityTypeSeeker $entityTypeSeeker,
         CreateUser $createUser,
         DeleteUser $deleteUser,
-        UpdateUser $updateUser
+        UpdateUser $updateUser,
+        AddRolesToUser $addRolesToUser,
     ) {
         $this->entityTypeSeeker = $entityTypeSeeker;
         $this->createUser = $createUser;
         $this->deleteUser = $deleteUser;
         $this->updateUser = $updateUser;
+        $this->addRolesToUser = $addRolesToUser;
     }
 
     public function resolveCases(
@@ -90,7 +96,8 @@ class SpecialCaseManager
             $firstCondition = is_numeric($fieldName) && ! empty($requestBody[$condition]);
             $secondCondition = is_string($fieldName)
                 && (is_string($condition) || is_callable($condition))
-                && $condition($fieldName);
+                && ! empty($requestBody[$fieldName])
+                && $condition($requestBody[$fieldName]);
 
             if (! $firstCondition && ! $secondCondition) {
                 return false;

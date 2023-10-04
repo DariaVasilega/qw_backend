@@ -97,12 +97,43 @@
                         <p id="password_error" class="mt-2 ml-2 text-sm text-red-600 hidden"><span class="font-medium"></span></p>
                     @endif
                 </fieldset>
+                @if(!$disabled)
+                    <fieldset>
+                        <div hx-ext="client-side-templates" _="on htmx:load remove @hx-ext">
+                            <div hx-get="{{ url('/roles?limit=99999') }}" hx-trigger="load" nunjucks-template="add_roles_to_user" hx-indicator="#add_roles_to_user_spinner">
+                                <div id="add_roles_to_user_spinner" class="flex justify-center">
+                                    <img alt="Spinner" class="h-20 w-20" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif"/>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                @endif
             </form>
 @if($id)
             </template>
         </div>
     </div>
 @endif
+
+<template id="add_roles_to_user">
+    {% if data.roles %}
+        <legend class="mb-4 w-full text-center">
+            <span class="text-lg text-gray-500">Add roles to user</span>
+        </legend>
+        <div class="w-full rounded-lg shadow">
+            <ul class="p-3 space-y-1 text-sm text-gray-700 flex flex-wrap">
+                {% for role in data.roles %}
+                    <li>
+                        <div class="flex items-center p-2 rounded hover:bg-gray-200">
+                            <input name="codes[@{{ loop.index }}]" id="role-@{{ role.code }}" type="checkbox" value="@{{ role.code }}" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
+                            <label for="role-@{{ role.code }}" class="w-full ml-2 text-sm font-medium text-gray-900 rounded">@{{ role.label }}</label>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+</template>
 
 <template id="response_message">
     <?php $userId = ($id ?: '{{ data.user.id }}') ?>
@@ -114,7 +145,7 @@
 
 @if($id && in_array('role_read', $permissions, true))
     <x-listing.related
-            :batch-url='url("/user/$id/roles")'
+            :batch-url='url("/user/{$userManager->getAuthMicroserviceUserIdByNativeUserId((int) $id)}/roles")'
             :get-one-url="url('/admin/page/role?disabled=true&id=') . '@{{ role.code }}'"
             :get-one-route="'#role-id-@{{ role.code }}-view'"
             :permissions="$permissions"
