@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services\Http;
 
 use App\Services\Http\SpecialCases\AddPermissionsToRole;
+use App\Services\Http\SpecialCases\AddPositionToUser;
 use App\Services\Http\SpecialCases\AddRolesToUser;
 use App\Services\Http\SpecialCases\CreateUser;
 use App\Services\Http\SpecialCases\DeleteUser;
@@ -27,6 +28,7 @@ class SpecialCaseManager
         'createUser',
         'addRolesToUser',
         'addPermissionsToRole',
+        'addPositionToUser',
     ];
 
     private EntityTypeSeeker $entityTypeSeeker;
@@ -41,6 +43,8 @@ class SpecialCaseManager
 
     private AddPermissionsToRole $addPermissionsToRole;
 
+    private AddPositionToUser $addPositionToUser;
+
     public function __construct(
         EntityTypeSeeker $entityTypeSeeker,
         CreateUser $createUser,
@@ -48,6 +52,7 @@ class SpecialCaseManager
         UpdateUser $updateUser,
         AddRolesToUser $addRolesToUser,
         AddPermissionsToRole $addPermissionsToRole,
+        AddPositionToUser $addPositionToUser,
     ) {
         $this->entityTypeSeeker = $entityTypeSeeker;
         $this->createUser = $createUser;
@@ -55,6 +60,7 @@ class SpecialCaseManager
         $this->updateUser = $updateUser;
         $this->addRolesToUser = $addRolesToUser;
         $this->addPermissionsToRole = $addPermissionsToRole;
+        $this->addPositionToUser = $addPositionToUser;
     }
 
     public function resolveCases(

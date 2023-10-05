@@ -87,6 +87,29 @@
                         </div>
                         <p id="dob_error" class="mt-2 ml-2 text-sm text-red-600 hidden"><span class="font-medium"></span></p>
                     </div>
+                    <div class="my-4">
+                        <div class="relative" hx-ext="client-side-templates" _="on htmx:load remove @hx-ext">
+                            <div id="positions_spinner" class="flex justify-center">
+                                <img alt="Spinner" class="h-50 w-50" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif"/>
+                            </div>
+                            <select oninput="document.getElementById('changed').checked = true; this.value === '' ? document.getElementById('salary').value = '' && document.getElementById('salary').setAttribute('disabled', 'disabled') : document.getElementById('salary').removeAttribute('disabled')" name="position" id="position" hx-get="{{ url('/positions?limit=999999') }}" hx-target="#positions" hx-indicator="#positions_spinner" hx-trigger="load" nunjucks-template="positions_list" _="on htmx:afterSwap remove @hx-indicator from me then remove #positions_spinner if '@{{ data.user.position }}' and '{{ $id }}' document.querySelector('#position [selected]').removeAttribute('selected') then document.querySelector('#position [value=\'@{{ data.user.position.position.code }}\']').setAttribute('selected', true) end" class="block px-2.5 pb-1.5 pt-3 w-full text-lg text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" {{ $disabled }}>
+                                <option selected value="">Select Position</option>
+                                <optgroup id="positions" label="Available Positions"></optgroup>
+                            </select>
+                            <label for="position" class="absolute font-medium text-gray-500 duration-300 transform -translate-y-3 scale-90 top-0 z-10 origin-[0] bg-gray-100 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:-top-0.5 peer-focus:scale-95 left-3 capitalize">position</label>
+                        </div>
+                    </div>
+                    <div class="my-4">
+                        <div class="relative">
+                            <input _="on click if document.getElementById('position').value === '' add @@disabled to me" oninput="this.value = /^[0-9.]+$/.test(this.value) && parseInt(this.value) <= 999_999 ? this.value : this.value.slice(0, -1); document.getElementById('changed').checked = true" type="text" name="salary" id="salary" class="block px-2.5 pb-1.5 pt-3 w-full text-lg text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" @if($id) value="@{{ data.user.position.salary }}" @endif placeholder=" " {{ $disabled }} />
+                            <label for="salary" class="absolute font-medium text-gray-500 duration-300 transform -translate-y-3 scale-90 top-0 z-10 origin-[0] bg-gray-100 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:-top-0.5 peer-focus:scale-95 left-3 capitalize">salary</label>
+                        </div>
+                    </div>
+                    <div class="hidden">
+                        <label>
+                            <input type="radio" name="changed" id="changed"/>
+                        </label>
+                    </div>
                     @if(!$disabled)
                         <div class="my-4">
                             <div class="relative">
@@ -114,6 +137,14 @@
         </div>
     </div>
 @endif
+
+<template id="positions_list">
+    <!-- {% if data.positions %} -->
+        <!-- {% for position in data.positions %} -->
+            <option value="@{{ position.code }}">@{{ position.label }}</option>
+        <!-- {% endfor %} -->
+    <!-- {% endif %} -->
+</template>
 
 <template id="add_roles_to_user">
     {% if data.roles %}
