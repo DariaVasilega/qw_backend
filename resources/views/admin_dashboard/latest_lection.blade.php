@@ -5,8 +5,11 @@
         </div>
         <template id="last_lection_statistic">
             <div class="flex justify-center mb-4">
-                {{-- TODO: link to the test --}}
-                <p class="text-2xl text-gray-500">Statistic for Lection Test: "<span class="text-gray-400 hover:text-gray-300 hover:cursor-pointer underline">@{{ label }}</span>"</p>
+                {% if label %}
+                    <p class="text-2xl text-gray-500">Statistic for Lection Test: "<span hx-get="{{ url('/admin/page/test?disabled=true&id=') }}@{{ test }}" hx-target=".content" class="text-gray-400 hover:text-gray-300 hover:cursor-pointer underline">@{{ label }}</span>"</p>
+                {% else %}
+                    <p class="text-2xl text-gray-500">This lection has not tests</p>
+                {% endif %}
             </div>
             <div class="relative w-50 h-50 -mt-5">
                 <div class="flex flex-nowrap">
@@ -14,7 +17,7 @@
                         <div class="w-1/3">
                             <div class="max-w-[250px] max-h-[250px]">
                                 {{-- Circle --}}
-                                <p class="-mt-12 mb-8 text-gray-500">Indicator of Completing:</p>
+                                <p class="-mt-10 mb-8 text-gray-500">Indicator of Completing:</p>
                                 <svg viewBox="0 0 36 36" class="block stroke-gray-500 hover:scale-110 hover:cursor-pointer">
                                     <path stroke-width="3.8" class="fill-none stroke-[#eee]"
                                           d="M18 2.0845

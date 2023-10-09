@@ -81,8 +81,11 @@ class LastLectionStatistic extends Controller
         return \response(
             [
                 'label' => $lastLectionResponse->object()->data->label,
+                'test' => $lastLectionResponse->object()->data->test,
                 'users' => $uncompletedUsers,
-                'percentage' => (int) round((count($uncompletedUsers) * 100) / $totalUsersCount),
+                'percentage' => count($completedUsers)
+                    ? (int) round((count($uncompletedUsers) * 100) / $totalUsersCount)
+                    : 0,
             ],
             $lastLectionResponse->status(),
             $lastLectionResponse->headers()
