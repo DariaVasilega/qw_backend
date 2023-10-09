@@ -22,6 +22,7 @@ Route::get('/admin/page/{view}', [\App\Http\Controllers\Admin\Page::class, 'rend
 
 // Custom Api Routes
 Route::any('/lection/last/statistic', [\App\Http\Controllers\Api\LastLectionStatistic::class, 'get']);
+Route::any('/users/most-perspective', [\App\Http\Controllers\Api\MostPerspectiveUsersStatistic::class, 'get']);
 
 // Microservices Proxy Router
 Route::any('{any}', [\App\Http\Controllers\Proxy::class, 'index'])->where('any', '.*');
