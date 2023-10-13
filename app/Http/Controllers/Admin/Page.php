@@ -14,6 +14,17 @@ class Page
         'user' => 'user_read',
         'roles' => 'role_read',
         'role' => 'role_read',
+        'history' => 'position_history_read',
+        'lections' => 'lection_read',
+        'lection' => 'lection_read',
+        'permissions' => 'permission_read',
+        'permission' => 'permission_read',
+        'positions' => 'position_read',
+        'position' => 'position_read',
+        'questions' => 'question_read',
+        'question' => 'question_read',
+        'tests' => 'test_read',
+        'test' => 'test_read',
     ];
 
     private PermissionManager $permissionManager;
