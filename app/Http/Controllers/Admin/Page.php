@@ -25,6 +25,8 @@ class Page
         'question' => 'question_read',
         'tests' => 'test_read',
         'test' => 'test_read',
+        'answers' => 'answer_read',
+        'answer' => 'answer_read',
     ];
 
     private PermissionManager $permissionManager;
