@@ -1,6 +1,6 @@
 <!-- {% if data.page and data.page.count > 1 %} -->
     <nav aria-label="Page Navigation" class="my-6 flex justify-center">
-        <ul class="flex items-center -space-x-px h-8 text-sm self-end">
+        <ul class="flex items-center -space-x-px h-8 text-sm self-end flex-wrap">
             <!-- {% if data.page.current > 1 %} -->
             <li>
                 <a hx-get="{{ $url }}?page=@{{ data.page.current - 1 }}" hx-target=".content" href="#{{ $view }}-p@{{ data.page.current - 1 }}" class="flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
