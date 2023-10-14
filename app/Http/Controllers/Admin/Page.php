@@ -27,6 +27,7 @@ class Page
         'test' => 'test_read',
         'answers' => 'answer_read',
         'answer' => 'answer_read',
+        'scores' => 'score_read',
     ];
 
     private PermissionManager $permissionManager;
