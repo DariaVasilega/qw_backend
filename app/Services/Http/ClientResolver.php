@@ -21,6 +21,8 @@ class ClientResolver
         'login' => 'authClient',
         'logout' => 'authClient',
         'auth' => 'authClient',
+        'user\/[0-9]+\/roles' => 'authClient',
+        'role\/[A-z0-9_-]+\/permissions' => 'authClient',
         'role' => 'authClient',
         'permission' => 'authClient',
         'lection' => 'learningClient',
@@ -47,11 +49,22 @@ class ClientResolver
 
     public function getClient(string $entityType): Client\AbstractMs
     {
-        if (! isset($this->clients[$entityType])) {
-            throw new \DomainException('No such client');
+        $entityMappings = array_filter(
+            array_keys($this->clients),
+            static fn ($regexp) => preg_match("/^$regexp/", $entityType)
+        );
+
+        $match = current($entityMappings);
+
+        if (! $match) {
+            if (! isset($this->clients[$entityType])) {
+                throw new \DomainException('No such client');
+            }
+
+            return $this->{$this->clients[$entityType]};
         }
 
-        return $this->{$this->clients[$entityType]};
+        return $this->{$this->clients[$match]};
     }
 
     public function getClientByUrlPath(string $urlPath): Client\AbstractMs

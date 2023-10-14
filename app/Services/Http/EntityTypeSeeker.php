@@ -10,6 +10,7 @@ class EntityTypeSeeker
         'login',
         'logout',
         'auth',
+        'role\/[A-z0-9_-]+\/permissions',
         'role',
         'permission',
         'lection',
@@ -17,12 +18,13 @@ class EntityTypeSeeker
         'question',
         'answer',
         'score',
+        'user\/[0-9]+\/roles',
         'user',
         'position',
         'position-histor',
     ];
 
-    public function seek(string $urlPath): ?string
+    public function seek(string $urlPath): string
     {
         $possibleEntityTypes = [];
 
@@ -33,6 +35,10 @@ class EntityTypeSeeker
             PREG_SET_ORDER
         );
 
-        return $possibleEntityTypes[0][0] ?? null;
+        if (! isset($possibleEntityTypes[0][0])) {
+            throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException('No such client');
+        }
+
+        return $possibleEntityTypes[0][0];
     }
 }

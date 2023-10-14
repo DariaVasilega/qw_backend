@@ -19,6 +19,11 @@ class PermissionManager
         'delete' => 'delete',
     ];
 
+    private const ENTITY_TYPES_MAPPING = [
+        'user\/[0-9]+\/roles' => 'role',
+        'role\/[A-z0-9_-]+\/permissions' => 'permission',
+    ];
+
     private \Illuminate\Support\Facades\Session $session;
 
     private ClientResolver $clientResolver;
@@ -46,12 +51,39 @@ class PermissionManager
             return true;
         }
 
-        $this->askPermissions();
-        $permissions = $this->session::get('permissions');
         $crudAction = $this->getCrudActionFromHttpMethod($httpMethod);
 
-        return is_array($permissions)
-            && in_array("{$entityType}_{$crudAction}", $permissions, true);
+        $entityMappings = array_filter(
+            array_keys(self::ENTITY_TYPES_MAPPING),
+            static fn ($regexp) => preg_match("/^$regexp/", $entityType)
+        );
+        $match = current($entityMappings);
+
+        if ($match) {
+            $entityType = self::ENTITY_TYPES_MAPPING[$match] ?? $entityType;
+        }
+
+        return $this->hasPermission("{$entityType}_{$crudAction}");
+    }
+
+    /**
+     * @throws \App\Exceptions\MicroserviceException
+     */
+    public function hasPermission(string $permission): bool
+    {
+        $permissions = $this->getPermissions();
+
+        return in_array($permission, $permissions, true);
+    }
+
+    /**
+     * @throws \App\Exceptions\MicroserviceException
+     */
+    public function getPermissions(): array
+    {
+        $this->askPermissions();
+
+        return $this->session::get('permissions', []);
     }
 
     /**

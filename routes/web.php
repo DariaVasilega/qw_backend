@@ -13,8 +13,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Common Router
-Route::any('/', static fn () => response('Qualification Work API'));
+// Admin Panel
+Route::get('/admin', [\App\Http\Controllers\Admin\Index::class, 'render']);
+Route::post('/admin/login', [\App\Http\Controllers\Admin\Login::class, 'action']);
+Route::post('/admin/logout', [\App\Http\Controllers\Admin\Logout::class, 'action']);
+Route::get('/admin/page/{view}', [\App\Http\Controllers\Admin\Page::class, 'render'])->where('view', '[a-z_]+');
+
+
+// Custom Api Routes
+Route::any('/lection/last/statistic', [\App\Http\Controllers\Api\LastLectionStatistic::class, 'get']);
+Route::any('/users/most-perspective', [\App\Http\Controllers\Api\MostPerspectiveUsersStatistic::class, 'get']);
+Route::any('/scores/extended/list', [\App\Http\Controllers\Api\Scores::class, 'get']);
 
 // Microservices Proxy Router
-Route::any( '{any}', [\App\Http\Controllers\Proxy::class, 'index'])->where('any', '.*');
+Route::any('{any}', [\App\Http\Controllers\Proxy::class, 'index'])->where('any', '.*');
+

@@ -17,8 +17,8 @@ class CreateUser extends AbstractCase
     protected function getRequestBodyConditions(): array
     {
         return [
-            'email',
-            'password',
+            'email' => static fn ($email) => $email === null || is_string($email),
+            'password' => static fn ($password) => $password === null || is_string($password),
         ];
     }
 

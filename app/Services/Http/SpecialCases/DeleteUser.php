@@ -33,13 +33,15 @@ class DeleteUser extends AbstractCase
         $email = $response->object()->data->user->email;
 
         $authClient = $this->clientResolver->getClient('auth');
-        $authUserId = $authClient
-            ->get("/users?email=$email", null, $request->headers->all())
+        $authUsersData = $authClient->get("/users?email=$email", null, $request->headers->all())
             ?->object()
             ?->data
-            ?->users[0]
-            ?->id;
-        $authClient->delete("/user/$authUserId", [], $request->headers->all());
+            ?->users;
+
+        if (!empty($authUsersData[0])) {
+            $authUserId = $authUsersData[0]?->id;
+            $authClient->delete("/user/$authUserId", [], $request->headers->all());
+        }
 
         $learningClient = $this->clientResolver->getClient('score');
         $learningClient->post('/score/delete-by-user-email', ['email' => $email], $request->headers->all());
