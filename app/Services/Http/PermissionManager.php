@@ -45,6 +45,12 @@ class PermissionManager
      */
     public function isPermitted(string $route, string $httpMethod): bool
     {
+        $client = parse_url($this->request->headers->get('origin'),  PHP_URL_HOST);
+
+        if ($client === env('CLIENT_URL')) {
+            return true;
+        }
+
         $entityType = $this->clientResolver->getClientEntityTypeByUrlPath($route);
 
         if (in_array($entityType, self::EXCLUDED_ROUTES, true)) {
