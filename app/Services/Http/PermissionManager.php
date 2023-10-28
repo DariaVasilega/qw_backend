@@ -45,7 +45,8 @@ class PermissionManager
      */
     public function isPermitted(string $route, string $httpMethod): bool
     {
-        $client = parse_url($this->request->headers->get('origin'),  PHP_URL_HOST);
+        $origin = $this->request->headers->get('origin') ?? '';
+        $client = parse_url($origin, PHP_URL_HOST);
 
         if ($client === env('CLIENT_URL')) {
             return true;
